@@ -3,8 +3,11 @@ using UnityEngine.Splines;
 
 public class EnemySpawner : MonoBehaviour
 {
+	public static EnemySpawner instance;
+
 	[Header("Properties")]
 	[SerializeField] float spawnDelay = 0.2f;
+	[SerializeField] int maxEnemies = 100;
 
 	[Header("Enemies")]
 	[SerializeField] GameObject enemyPrefab;
@@ -13,6 +16,15 @@ public class EnemySpawner : MonoBehaviour
 	Spline _spline;
 
 	float _elapsedTime = 0f;
+	[SerializeField] int _currentNumber = 0;
+
+	private void Awake()
+	{
+		if (instance == null)
+			instance = this;
+		else
+			Destroy(gameObject);
+	}
 
 	private void Start()
 	{
@@ -27,9 +39,18 @@ public class EnemySpawner : MonoBehaviour
 		}
 		else
 		{
-			Instantiate(enemyPrefab, GetRandomPosition(), Quaternion.identity, transform);
+			if (_currentNumber < maxEnemies)
+			{
+				Instantiate(enemyPrefab, GetRandomPosition(), Quaternion.identity, transform);
+				_currentNumber++;
+			}
 			_elapsedTime -= spawnDelay;
 		}
+	}
+
+	public void RemoveFromCap()
+	{
+		_currentNumber--;
 	}
 
 	Vector3 GetRandomPosition()

@@ -164,7 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gridSize: {x: 60, y: 30}
-  enemySpline: {fileID: 1667869011}
+  coinValue: 100
+  coinPrefab: {fileID: 8222166327050320631, guid: 87b38b99a81f54f4abeb38caf1bc596a, type: 3}
   groundTile: {fileID: 11400000, guid: 2fc67c03bf43e3445a330d70962508a8, type: 2}
   tilemapGrid: {fileID: 1738141863}
 --- !u!1 &154472579

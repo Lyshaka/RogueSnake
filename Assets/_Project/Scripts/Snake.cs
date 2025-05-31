@@ -24,6 +24,7 @@ public class Snake : MonoBehaviour
 	private float _loopElapsedTime = 0f;
 
 	public Vector3 HeadPosition => _head.obj.transform.position;
+	public Vector2Int HeadGridPosition => _head.pos;
 
 	public bool IsHead(Segment s) => s.prev == null;
 	public bool IsTail(Segment s) => s.next == null;
@@ -159,6 +160,9 @@ public class Snake : MonoBehaviour
 			}
 			current = current.next;
 		}
+
+		// Check if the snake is on the coin
+		LevelManager.instance.TryEatCoin();
 	}
 
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.AI;
-using static UnityEngine.GraphicsBuffer;
 
 public class Enemy : MonoBehaviour
 {
@@ -14,6 +13,8 @@ public class Enemy : MonoBehaviour
 
 	private NavMeshAgent _agent;
 	private float _health;
+
+	private bool _isDead = false;
 
 	private void Start()
 	{
@@ -39,9 +40,11 @@ public class Enemy : MonoBehaviour
 	public void Damage(float value, Turret origin)
 	{
 		_health -= value;
-		if (_health <= 0f)
+		if (_health <= 0f && !_isDead)
 		{
+			_isDead = true;
 			origin.RemoveFromTargets(this);
+			EnemySpawner.instance.RemoveFromCap();
 			Destroy(gameObject);
 		}
 	}
