@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class Snake : MonoBehaviour
 {
+	public static Snake instance;
+
 	[Header("Properties")]
 	[SerializeField] float speed = 3f;
 	[SerializeField] int length = 3;
@@ -21,11 +23,23 @@ public class Snake : MonoBehaviour
 
 	private float _loopElapsedTime = 0f;
 
+	public Vector3 HeadPosition => _head.obj.transform.position;
+
+	public bool IsHead(Segment s) => s.prev == null;
+	public bool IsTail(Segment s) => s.next == null;
+	public bool IsMiddle(Segment s) => s.next != null && s.prev != null;
+
+	private void Awake()
+	{
+		if (instance == null)
+			instance = this;
+		else
+			Destroy(gameObject);
+	}
+
 	private void Start()
 	{
 		_loopDuration = 1f / speed;
-
-		//_length = length;
 
 		_head = new(LevelManager.instance.GridCenter, snakeSpritePrefab, transform);
 		_head.obj.name = "Segment_" + _head.index;
@@ -35,31 +49,29 @@ public class Snake : MonoBehaviour
 		{
 			AddSegment();
 		}
+
+		// Spawn Turrets
+		Segment current = _head;
+		while (current != _tail)
+		{
+			current.SpawnTurret();
+			current = current.next;
+		}
 	}
 
 	private void Update()
 	{
 		// Inputs
 		if (Input.GetKey(KeyCode.RightArrow) && _head.dir != Vector2Int.left)
-		{
 			_moveInput = Vector2Int.right;
-		}
 		else if (Input.GetKey(KeyCode.LeftArrow) && _head.dir != Vector2Int.right)
-		{
 			_moveInput = Vector2Int.left;
-		}
 		else if (Input.GetKey(KeyCode.UpArrow) && _head.dir != Vector2Int.down)
-		{
 			_moveInput = Vector2Int.up;
-		}
 		else if (Input.GetKey(KeyCode.DownArrow) && _head.dir != Vector2Int.up)
-		{
 			_moveInput = Vector2Int.down;
-		}
 		else
-		{
 			_moveInput = Vector2Int.zero;
-		}
 
 		if (Input.GetKeyDown(KeyCode.KeypadPlus))
 		{
@@ -168,6 +180,11 @@ public class Snake : MonoBehaviour
 			obj.transform.position = new(pos.x, 0f, pos.y);
 			_snakeSegment = obj.GetComponent<SnakeSegment>();
 			_snakeSegment.SetSegment(this);
+		}
+
+		public void SpawnTurret()
+		{
+			_snakeSegment.SpawnTurret();
 		}
 
 		public void UpdateSegment()

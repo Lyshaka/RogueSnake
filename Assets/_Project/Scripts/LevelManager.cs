@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Splines;
 using UnityEngine.Tilemaps;
 
 public class LevelManager : MonoBehaviour
@@ -6,7 +7,10 @@ public class LevelManager : MonoBehaviour
 	public static LevelManager instance;
 
 	[Header("Properties")]
-	[SerializeField] Vector2Int gridSize = new(24, 17);
+	[SerializeField] Vector2Int gridSize = new(60, 30);
+
+	[Header("Enemies")]
+	[SerializeField] SplineContainer enemySpline;
 
 	[Header("Technical")]
 	[SerializeField] TileBase groundTile;
@@ -25,7 +29,7 @@ public class LevelManager : MonoBehaviour
 	private void Start()
 	{
 		// Place Camera in the middle
-		Camera.main.transform.position = new(GridCenter.x, 50f, GridCenter.y);
+		//Camera.main.transform.position = new(GridCenter.x, 50f, GridCenter.y);
 
 		// Create Grid
 		for (int i = 0; i < gridSize.x; i++)

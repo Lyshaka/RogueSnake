@@ -1,8 +1,12 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SnakeSegment : MonoBehaviour
 {
+	[Header("Turret")]
+	[SerializeField] GameObject turretPrefab;
+
 	[Header("Sprites")]
 	[SerializeField] Sprite[] headSprites;
 	[SerializeField] Sprite[] tailSprites;
@@ -11,6 +15,8 @@ public class SnakeSegment : MonoBehaviour
 
 	private SpriteRenderer _spriteRenderer;
 	private Snake.Segment _segment;
+
+	private Turret _turret;
 
 	Dictionary<(Vector2Int, Vector2Int), Sprite> _segmentSprites;
 
@@ -75,6 +81,15 @@ public class SnakeSegment : MonoBehaviour
 
 			if (_segmentSprites.TryGetValue((dirToPrev, dirToNext), out Sprite sprite))
 				_spriteRenderer.sprite = sprite;
+		}
+	}
+
+	public void SpawnTurret()
+	{
+		if (Snake.instance.IsMiddle(_segment))
+		{
+			GameObject obj = Instantiate(turretPrefab, _segment.obj.transform.position, Quaternion.identity, _segment.obj.transform);
+			_turret = obj.GetComponentInChildren<Turret>();
 		}
 	}
 

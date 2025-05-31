@@ -98,6 +98,7 @@ GameObject:
   - component: {fileID: 6715992562750691462}
   - component: {fileID: 4735265858001738918}
   - component: {fileID: 1019680590040244546}
+  - component: {fileID: 4968026910846488653}
   m_Layer: 3
   m_Name: SnakeSegment
   m_TagString: Untagged
@@ -133,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21d2952ee2ffb5c448edcbf70a9f5041, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  turretPrefab: {fileID: 178362782663138803, guid: 7093b13a773c37f4ca3df4f51e6e466d, type: 3}
   headSprites:
   - {fileID: -959983410, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
   - {fileID: -355659646, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
@@ -174,3 +176,19 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 0.45
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!208 &4968026910846488653
+NavMeshObstacle:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8687019303561235638}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Shape: 1
+  m_Extents: {x: 0.2, y: 0.5, z: 0.2}
+  m_MoveThreshold: 0
+  m_Carve: 1
+  m_CarveOnlyStationary: 0
+  m_Center: {x: 0, y: 0, z: 0}
+  m_TimeToStationary: 0
