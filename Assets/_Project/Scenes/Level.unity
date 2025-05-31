@@ -886,7 +886,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spawnDelay: 0.2
+  maxEnemies: 100
   enemyPrefab: {fileID: 1872719721524703141, guid: 32191a08b06ebc04aa7794c2446d6dea, type: 3}
+  _currentNumber: 0
 --- !u!1 &1738141860
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,14 +1308,6 @@ PrefabInstance:
     - target: {fileID: 3959491818091471721, guid: 65d94f9e26751094fa733ff013f7e13b, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8272706784923331731, guid: 65d94f9e26751094fa733ff013f7e13b, type: 3}
-      propertyPath: speed
-      value: 15
-      objectReference: {fileID: 0}
-    - target: {fileID: 8272706784923331731, guid: 65d94f9e26751094fa733ff013f7e13b, type: 3}
-      propertyPath: length
-      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

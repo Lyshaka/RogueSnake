@@ -8,9 +8,12 @@ public class Snake : MonoBehaviour
 	[Header("Properties")]
 	[SerializeField] float speed = 3f;
 	[SerializeField] int length = 3;
+	[SerializeField] float maxHealth = 1000f;
 
-	[Header("Properties")]
+	[Header("Technical")]
 	[SerializeField] GameObject snakeSpritePrefab;
+
+	private float _health;
 
 	private Segment _head;
 	private Segment _tail;
@@ -40,8 +43,11 @@ public class Snake : MonoBehaviour
 
 	private void Start()
 	{
+		// Init
 		_loopDuration = 1f / speed;
+		_health = maxHealth;
 
+		// Spawn snake in the center of the grid
 		_head = new(LevelManager.instance.GridCenter, snakeSpritePrefab, transform);
 		_head.obj.name = "Segment_" + _head.index;
 		_tail = _head;
@@ -99,6 +105,28 @@ public class Snake : MonoBehaviour
 		}
 	}
 
+	public void Damage(float value)
+	{
+		_health -= value;
+		Debug.Log("Health : " + _health);
+		if (_health <= 0f)
+		{
+			Kill();
+		}
+	}
+
+	void Kill()
+	{
+		Debug.Log("Ouch !");
+		//Time.timeScale = 0f;
+		//#if UNITY_EDITOR
+		//				EditorApplication.isPlaying = false;
+		//#else
+		//				Application.Quit();
+		//#endif
+
+	}
+
 	void AddSegment()
 	{
 		Segment newSegment = new(_tail.pos, snakeSpritePrefab, transform)
@@ -142,6 +170,12 @@ public class Snake : MonoBehaviour
 			current = current.next;
 		}
 
+		// Check if the snake hit a wall
+		if (_head.pos.x < 0 || _head.pos.x >= LevelManager.instance.GridSize.x ||
+			_head.pos.y < 0 || _head.pos.y >= LevelManager.instance.GridSize.y)
+		{
+			Kill();
+		}
 
 		// Check if the snake hit itself
 		current = _head.next;
@@ -150,13 +184,7 @@ public class Snake : MonoBehaviour
 		{
 			if (_head.pos == current.pos && _currentDir != Vector2Int.zero)
 			{
-				Debug.Log("Ouch !");
-//#if UNITY_EDITOR
-//				EditorApplication.isPlaying = false;
-//#else
-//				Application.Quit();
-//#endif
-
+				Kill();
 			}
 			current = current.next;
 		}

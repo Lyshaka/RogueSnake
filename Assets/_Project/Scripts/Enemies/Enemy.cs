@@ -4,8 +4,10 @@ using UnityEngine.AI;
 public class Enemy : MonoBehaviour
 {
 	[Header("Properties")]
-	[SerializeField] float range = 8f;
+	[SerializeField] float detectionRange = 20f;
+	[SerializeField] float attackRange = 3f;
 	[SerializeField] float maxHealth = 100f;
+	[SerializeField] float damage = 10f;
 	[SerializeField] float moveSpeed = 8f;
 
 	[Header("Technical")]
@@ -21,7 +23,7 @@ public class Enemy : MonoBehaviour
 		_agent = GetComponentInChildren<NavMeshAgent>();
 		_agent.speed = moveSpeed;
 		_health = maxHealth;
-		detection.SetRange(range);
+		detection.SetRange(detectionRange);
 	}
 
 	private void Update()
@@ -29,6 +31,10 @@ public class Enemy : MonoBehaviour
 		if (detection.target != null)
 		{
 			_agent.SetDestination(detection.target.position);
+			if (Utilities.IsInRange(transform.position, detection.target.position, attackRange))
+			{
+				detection.target.GetComponentInChildren<SnakeSegment>().Damage(damage * Time.deltaTime);
+			}
 		}
 		else
 		{

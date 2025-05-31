@@ -21,6 +21,7 @@ public class LevelManager : MonoBehaviour
 	private Vector2Int _coinPosition;
 
 	public Vector2Int GridCenter { get => new(gridSize.x / 2, gridSize.y / 2); }
+	public Vector2Int GridSize => gridSize;
 
 	private void Awake()
 	{

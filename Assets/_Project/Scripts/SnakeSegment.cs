@@ -13,6 +13,9 @@ public class SnakeSegment : MonoBehaviour
 	[SerializeField] Sprite[] straightSprites;
 	[SerializeField] Sprite[] cornerSprites;
 
+	[Header("VFX")]
+	[SerializeField] ParticleSystem damageParticleSystem;
+
 	private SpriteRenderer _spriteRenderer;
 	private Snake.Segment _segment;
 
@@ -45,6 +48,11 @@ public class SnakeSegment : MonoBehaviour
 		};
 	}
 
+	public void Damage(float value)
+	{
+		damageParticleSystem.Play();
+		Snake.instance.Damage(value);
+	}
 
 	public void UpdateSegment()
 	{
