@@ -1,0 +1,108 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: SA_SnakeSprites
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings: []
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 1
+      enableAlphaDilation: 0
+    secondaryTextureSettings: {}
+    variantMultiplier: 1
+    packables:
+    - {fileID: -959983410, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -355659646, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -689026801, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -429498256, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -229376421, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -806843768, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 168553274, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 62529215, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -797563557, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 1786863501, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 1083243746, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -1342038557, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 238116716, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -1791187147, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: 744712985, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    - {fileID: -1960617180, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+    bindAsDefault: 1
+    isAtlasV2: 0
+    cachedData: {fileID: 0}
+    packedSpriteRenderDataKeys:
+    - f669b13f4859b7340bdf3237de840cae: 744712985
+    - f669b13f4859b7340bdf3237de840cae: -1960617180
+    - f669b13f4859b7340bdf3237de840cae: 1083243746
+    - f669b13f4859b7340bdf3237de840cae: -1342038557
+    - f669b13f4859b7340bdf3237de840cae: 238116716
+    - f669b13f4859b7340bdf3237de840cae: -1791187147
+    - f669b13f4859b7340bdf3237de840cae: -806843768
+    - f669b13f4859b7340bdf3237de840cae: -229376421
+    - f669b13f4859b7340bdf3237de840cae: 62529215
+    - f669b13f4859b7340bdf3237de840cae: 168553274
+    - f669b13f4859b7340bdf3237de840cae: -355659646
+    - f669b13f4859b7340bdf3237de840cae: -959983410
+    - f669b13f4859b7340bdf3237de840cae: -429498256
+    - f669b13f4859b7340bdf3237de840cae: -689026801
+    - f669b13f4859b7340bdf3237de840cae: 1786863501
+    - f669b13f4859b7340bdf3237de840cae: -797563557
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 744712985, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -1960617180, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: 1083243746, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -1342038557, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: 238116716, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -1791187147, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -806843768, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -229376421, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: 62529215, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: 168553274, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -355659646, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -959983410, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -429498256, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -689026801, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: 1786863501, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  - {fileID: -797563557, guid: f669b13f4859b7340bdf3237de840cae, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - snake_tileset_14
+  - snake_tileset_15
+  - snake_tileset_10
+  - snake_tileset_11
+  - snake_tileset_12
+  - snake_tileset_13
+  - snake_tileset_5
+  - snake_tileset_4
+  - snake_tileset_7
+  - snake_tileset_6
+  - snake_tileset_1
+  - snake_tileset_0
+  - snake_tileset_3
+  - snake_tileset_2
+  - snake_tileset_9
+  - snake_tileset_8
+  m_RenderDataMap: {}
+  m_Tag: SA_SnakeSprites
+  m_IsVariant: 0
