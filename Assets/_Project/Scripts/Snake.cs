@@ -46,6 +46,7 @@ public class Snake : MonoBehaviour
 		// Init
 		_loopDuration = 1f / speed;
 		_health = maxHealth;
+		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
 
 		// Spawn snake in the center of the grid
 		_head = new(LevelManager.instance.GridCenter, snakeSpritePrefab, transform);
@@ -108,11 +109,12 @@ public class Snake : MonoBehaviour
 	public void Damage(float value)
 	{
 		_health -= value;
-		Debug.Log("Health : " + _health);
 		if (_health <= 0f)
 		{
+			_health = 0f;
 			Kill();
 		}
+		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
 	}
 
 	void Kill()
