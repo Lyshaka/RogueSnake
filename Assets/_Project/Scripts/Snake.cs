@@ -118,6 +118,14 @@ public class Snake : MonoBehaviour
 		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
 	}
 
+	public void Heal(float value)
+	{
+		_health += value;
+		if (_health > maxHealth)
+			_health = maxHealth;
+		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
+	}
+
 	void Kill()
 	{
 		Debug.Log("Ouch !");

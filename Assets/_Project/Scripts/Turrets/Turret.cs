@@ -47,7 +47,7 @@ public class Turret : MonoBehaviour
 		{
 			if (_target != null)
 			{
-				GameObject obj = Instantiate(bulletPrefab, transform.position, canonTransform.rotation);
+				GameObject obj = Instantiate(bulletPrefab, transform.position, canonTransform.rotation, GameManager.instance.BulletParent);
 				obj.GetComponent<Bullet>().Setup(damage, projectileSpeed, this);
 			}
 			_shootElapsedTime -= _shootDelay;

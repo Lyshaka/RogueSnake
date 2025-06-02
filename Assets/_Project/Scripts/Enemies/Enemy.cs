@@ -69,7 +69,7 @@ public class Enemy : MonoBehaviour
 	{
 		_health -= value;
 		_blinkElapsedTime = 0f;
-		GameObject obj = Instantiate(damageNumberPrefab, transform.position, Quaternion.identity);
+		GameObject obj = Instantiate(damageNumberPrefab, transform.position, Quaternion.identity, GameManager.instance.FeedbackTextParent);
 		obj.GetComponent<DamageText>().Setup(value, projectileDirection);
 		if (_health <= 0f && !_isDead)
 		{

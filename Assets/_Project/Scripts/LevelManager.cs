@@ -14,13 +14,24 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] GameObject coinPrefab;
 	[SerializeField] GameObject coinFeedbackTextPrefab;
 
+	[Header("Fruit")]
+	[SerializeField] GameObject fruitPrefab;
+	[SerializeField] GameObject fruitFeedbackTextPrefab;
+
 	[Header("Technical")]
 	[SerializeField] TileBase groundTile;
 	[SerializeField] Tilemap tilemapGrid;
 
+	// Coin
 	private GameObject _coinObj;
 	private CoinObject _coin;
 	private Vector2Int _coinPosition;
+
+	// Fruit
+	private GameObject _fruitObj;
+	private FruitObject _fruit;
+	private Vector2Int _fruitPosition;
+	private bool _fruitIsActive = false;
 
 	public Vector2Int GridCenter { get => new(gridSize.x / 2, gridSize.y / 2); }
 	public Vector2Int GridSize => gridSize;
@@ -48,6 +59,13 @@ public class LevelManager : MonoBehaviour
 		_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 		_coinObj = Instantiate(coinPrefab, new(_coinPosition.x, 0f, _coinPosition.y), Quaternion.identity, transform);
 		_coin = _coinObj.GetComponent<CoinObject>();
+
+		// Spawn Fruit
+		_fruitPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
+		_fruitObj = Instantiate(fruitPrefab, new(_fruitPosition.x, 0f, _fruitPosition.y), Quaternion.identity, transform);
+		_fruit = _fruitObj.GetComponent<FruitObject>();
+		_fruitIsActive = true;
+		_fruitObj.SetActive(_fruitIsActive);
 	}
 
 	public void TryEatCoin()
@@ -56,15 +74,33 @@ public class LevelManager : MonoBehaviour
 		{
 			GameManager.instance.AddCoins(coinValue);
 			SpawnCoinText(coinValue, Utilities.GridToWorld(_coinPosition));
-			_coin.PlayAnim();
 			_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
-			_coinObj.transform.position = new(_coinPosition.x, 0f, _coinPosition.y);
+			_coinObj.transform.position = Utilities.GridToWorld(_coinPosition);
+			_coin.PlayAnim();
+
+			// Spawn a fruit (maybe ?)
+			if (!_fruitIsActive)
+			{
+				_fruitIsActive = true;
+				_fruitObj.SetActive(_fruitIsActive);
+				_fruitPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
+				_fruitObj.transform.position = Utilities.GridToWorld(_fruitPosition);
+				_fruit.PlayAnim();
+			}
+		}
+
+		if (_fruitIsActive && Snake.instance.HeadGridPosition == _fruitPosition)
+		{
+			Snake.instance.Heal(100f);
+			_fruit.StopAnim();
+			_fruitIsActive = false;
+			_fruitObj.SetActive(_fruitIsActive);
 		}
 	}
 
 	public void SpawnCoinText(int value, Vector3 position)
 	{
-		GameObject obj = Instantiate(coinFeedbackTextPrefab, position, Quaternion.identity);
+		GameObject obj = Instantiate(coinFeedbackTextPrefab, position, Quaternion.identity, GameManager.instance.FeedbackTextParent);
 		obj.GetComponent<CoinText>().Setup(value);
 	}
 }
