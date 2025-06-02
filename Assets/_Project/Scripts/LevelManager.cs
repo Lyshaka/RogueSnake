@@ -92,6 +92,7 @@ public class LevelManager : MonoBehaviour
 		if (_fruitIsActive && Snake.instance.HeadGridPosition == _fruitPosition)
 		{
 			Snake.instance.Heal(100f);
+			SpawnHealText(100f, Utilities.GridToWorld(_fruitPosition));
 			_fruit.StopAnim();
 			_fruitIsActive = false;
 			_fruitObj.SetActive(_fruitIsActive);
@@ -102,5 +103,11 @@ public class LevelManager : MonoBehaviour
 	{
 		GameObject obj = Instantiate(coinFeedbackTextPrefab, position, Quaternion.identity, GameManager.instance.FeedbackTextParent);
 		obj.GetComponent<CoinText>().Setup(value);
+	}
+
+	public void SpawnHealText(float value, Vector3 position)
+	{
+		GameObject obj = Instantiate(fruitFeedbackTextPrefab, position, Quaternion.identity, GameManager.instance.FeedbackTextParent);
+		obj.GetComponent<HealText>().Setup(value);
 	}
 }

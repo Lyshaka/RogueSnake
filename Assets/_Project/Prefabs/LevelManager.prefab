@@ -49,6 +49,6 @@ MonoBehaviour:
   coinPrefab: {fileID: 8222166327050320631, guid: 87b38b99a81f54f4abeb38caf1bc596a, type: 3}
   coinFeedbackTextPrefab: {fileID: 3643209187131768536, guid: 173ff6b3db47a084dac1e74ae24e3ff8, type: 3}
   fruitPrefab: {fileID: 3967710167757453733, guid: 49bc2cd3aff019c46830610a47d7c1e4, type: 3}
-  fruitFeedbackTextPrefab: {fileID: 0}
+  fruitFeedbackTextPrefab: {fileID: 2351209547128412679, guid: 1cc83d433d0a8c04590f981f2a0276a4, type: 3}
   groundTile: {fileID: 11400000, guid: 2fc67c03bf43e3445a330d70962508a8, type: 2}
   tilemapGrid: {fileID: 0}
