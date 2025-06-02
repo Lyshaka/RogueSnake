@@ -13,7 +13,6 @@ public class Snake : MonoBehaviour
 
 	[Header("Technical")]
 	[SerializeField] GameObject snakeSpritePrefab;
-	[SerializeField] GameObject healFeedbackTextPrefab;
 
 	private float _health;
 
