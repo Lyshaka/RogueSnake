@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
 	// Coins
 	public int coins = 0;
 
+	private float _timer = 0f;
+
 	// Bullets
 	public Transform BulletParent => bulletParent;
 	public Transform FeedbackTextParent => feedbacksTextParent;
@@ -24,6 +26,17 @@ public class GameManager : MonoBehaviour
 		}
 		else
 			Destroy(gameObject);
+	}
+
+	private void Update()
+	{
+		HandleTimer();
+	}
+
+	void HandleTimer()
+	{
+		_timer += Time.deltaTime;
+		UserInterfaceManager.instance.SetTimer(_timer);
 	}
 
 	public void AddCoins(int value)

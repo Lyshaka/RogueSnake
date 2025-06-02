@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,10 +12,14 @@ public class UserInterfaceManager : MonoBehaviour
 	[SerializeField] RectMask2D healthBarMask;
 	[SerializeField] TextMeshProUGUI healthBarText;
 	
-	[Header("Coins")] 
+	[Header("Coins")]
 	[SerializeField] TextMeshProUGUI coinText;
 	[SerializeField] Transform coinTransform;
 	[SerializeField] float coinGrowDuration = 0.2f;
+
+	[Header("Timer")]
+	[SerializeField] TextMeshProUGUI timerText;
+
 
 	float _coinElapsedTime = 0f;
 
@@ -50,5 +55,15 @@ public class UserInterfaceManager : MonoBehaviour
 	{
 		_coinElapsedTime = coinGrowDuration;
 		coinText.text = value.ToString();
+	}
+
+	public void SetTimer(float totalSeconds)
+	{
+		int hours = (int)(totalSeconds / 3600);
+		int minutes = (int)((totalSeconds % 3600) / 60);
+		int seconds = (int)(totalSeconds % 60);
+		int milliseconds = (int)((totalSeconds - MathF.Floor(totalSeconds)) * 1000);
+
+		timerText.text = $"<mspace=36>{hours:00}</mspace>:<mspace=36>{minutes:00}</mspace>:<mspace=36>{seconds:00}</mspace>:<mspace=36>{milliseconds:000}</mspace>";
 	}
 }
