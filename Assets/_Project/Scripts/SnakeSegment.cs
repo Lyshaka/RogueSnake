@@ -84,8 +84,8 @@ public class SnakeSegment : MonoBehaviour
 		}
 		else // All the others
 		{
-			Vector2Int dirToPrev = _segment.prev.pos - _segment.pos;
-			Vector2Int dirToNext = _segment.next.pos - _segment.pos;
+			Vector2Int dirToPrev = GetDirection(_segment.pos, _segment.prev.pos);
+			Vector2Int dirToNext = GetDirection(_segment.pos, _segment.next.pos);
 
 			if (_segmentSprites.TryGetValue((dirToPrev, dirToNext), out Sprite sprite))
 				_spriteRenderer.sprite = sprite;
@@ -105,4 +105,25 @@ public class SnakeSegment : MonoBehaviour
 	{
 		_segment = segment;
 	}
+
+	private Vector2Int GetDirection(Vector2Int from, Vector2Int to)
+	{
+		Vector2Int delta = to - from;
+
+		// Handle horizontal wrapping
+		if (Mathf.Abs(delta.x) > LevelManager.instance.GridSize.x / 2)
+			delta.x = (int)-Mathf.Sign(delta.x);
+
+		// Handle vertical wrapping
+		if (Mathf.Abs(delta.y) > LevelManager.instance.GridSize.y / 2)
+			delta.y = (int)-Mathf.Sign(delta.y);
+
+		// Clamp to valid cardinal directions
+		if (delta.x != 0) delta.x = (int)Mathf.Sign(delta.x);
+		if (delta.y != 0) delta.y = (int)Mathf.Sign(delta.y);
+
+		return delta;
+	}
+
+
 }

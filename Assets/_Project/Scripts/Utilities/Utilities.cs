@@ -30,4 +30,14 @@ public static class Utilities
 	{
 		return (destination - origin).sqrMagnitude <= (range * range);
 	}
+
+	public static Vector3 GridToWorld(Vector2Int gridPos)
+	{
+		return new(gridPos.x, 0f, gridPos.y);
+	}
+
+	public static Vector2Int WorldToGrid(Vector3 worldPos)
+	{
+		return new((int)worldPos.x, (int)worldPos.z);
+	}
 }

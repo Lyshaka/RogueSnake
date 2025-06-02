@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
 	[Header("Coins")]
 	[SerializeField] int coinValue = 100;
 	[SerializeField] GameObject coinPrefab;
+	[SerializeField] GameObject coinFeedbackTextPrefab;
 
 	[Header("Technical")]
 	[SerializeField] TileBase groundTile;
@@ -51,9 +52,16 @@ public class LevelManager : MonoBehaviour
 	{
 		if (Snake.instance.HeadGridPosition == _coinPosition)
 		{
-			Debug.Log("+100 !");
+			GameManager.instance.AddCoins(coinValue);
+			SpawnCoinText(coinValue, Utilities.GridToWorld(_coinPosition));
 			_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 			_coinObj.transform.position = new(_coinPosition.x, 0f, _coinPosition.y);
 		}
+	}
+
+	public void SpawnCoinText(int value, Vector3 position)
+	{
+		GameObject obj = Instantiate(coinFeedbackTextPrefab, position, Quaternion.identity);
+		obj.GetComponent<CoinText>().Setup(value);
 	}
 }

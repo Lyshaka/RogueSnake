@@ -55,6 +55,8 @@ MonoBehaviour:
   damage: 10
   moveSpeed: 5
   detection: {fileID: 3284246144201700702}
+  spriteRenderer: {fileID: 4765541224415227887}
+  damageNumberPrefab: {fileID: 7086237857145105157, guid: 95c64e460d6e6d741826f0678061c1b5, type: 3}
 --- !u!195 &4998440937149836421
 NavMeshAgent:
   m_ObjectHideFlags: 0

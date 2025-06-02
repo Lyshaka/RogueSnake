@@ -1,3 +1,4 @@
+using System.Threading;
 using UnityEditor;
 using UnityEngine;
 
@@ -162,6 +163,12 @@ public class Snake : MonoBehaviour
 		_head.dir = _currentDir;
 		_head.pos += _head.dir;
 		_head.obj.transform.position += new Vector3(_head.dir.x, 0f, _head.dir.y);
+
+		// Warp the head around the circuit
+		if (_head.pos.x < 0) _head.pos.x = LevelManager.instance.GridSize.x - 1;
+		if (_head.pos.x >= LevelManager.instance.GridSize.x) _head.pos.x = 0;
+		if (_head.pos.y < 0) _head.pos.y = LevelManager.instance.GridSize.y - 1;
+		if (_head.pos.y >= LevelManager.instance.GridSize.y) _head.pos.y = 0;
 
 		// Update each segment sprite and object position
 		current = _head;
