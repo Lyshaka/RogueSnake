@@ -19,6 +19,7 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] Tilemap tilemapGrid;
 
 	private GameObject _coinObj;
+	private CoinObject _coin;
 	private Vector2Int _coinPosition;
 
 	public Vector2Int GridCenter { get => new(gridSize.x / 2, gridSize.y / 2); }
@@ -46,6 +47,7 @@ public class LevelManager : MonoBehaviour
 		// Spawn Coin
 		_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 		_coinObj = Instantiate(coinPrefab, new(_coinPosition.x, 0f, _coinPosition.y), Quaternion.identity, transform);
+		_coin = _coinObj.GetComponent<CoinObject>();
 	}
 
 	public void TryEatCoin()
@@ -54,6 +56,7 @@ public class LevelManager : MonoBehaviour
 		{
 			GameManager.instance.AddCoins(coinValue);
 			SpawnCoinText(coinValue, Utilities.GridToWorld(_coinPosition));
+			_coin.PlayAnim();
 			_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 			_coinObj.transform.position = new(_coinPosition.x, 0f, _coinPosition.y);
 		}
