@@ -33,6 +33,14 @@ public class EnemySpawner : MonoBehaviour
 
 	private void Update()
 	{
+		HandleSpawn();
+	}
+
+	void HandleSpawn()
+	{
+		if (!GameManager.instance.StartedTimer)
+			return;
+
 		if (_elapsedTime < spawnDelay)
 		{
 			_elapsedTime += Time.deltaTime;

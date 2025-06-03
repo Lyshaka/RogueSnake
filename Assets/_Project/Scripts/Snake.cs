@@ -82,6 +82,7 @@ public class Snake : MonoBehaviour
 		else
 			_moveInput = Vector2Int.zero;
 
+		// Debug, not meant to stay
 		if (Input.GetKeyDown(KeyCode.KeypadPlus))
 		{
 			AddSegment();
@@ -92,6 +93,10 @@ public class Snake : MonoBehaviour
 		if (_moveInput != Vector2Int.zero)
 			_currentDir = _moveInput;
 
+		if (!GameManager.instance.StartedTimer && _currentDir != Vector2Int.zero)
+		{
+			GameManager.instance.StartTimer();
+		}
 
 		if (_loopElapsedTime < _loopDuration)
 		{
