@@ -10,7 +10,6 @@ public class LevelManager : MonoBehaviour
 	[SerializeField] Vector2Int gridSize = new(60, 30);
 
 	[Header("Coins")]
-	[SerializeField] int coinValue = 100;
 	[SerializeField] GameObject coinPrefab;
 	[SerializeField] GameObject coinFeedbackTextPrefab;
 
@@ -64,7 +63,7 @@ public class LevelManager : MonoBehaviour
 		_fruitPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 		_fruitObj = Instantiate(fruitPrefab, new(_fruitPosition.x, 0f, _fruitPosition.y), Quaternion.identity, transform);
 		_fruit = _fruitObj.GetComponent<FruitObject>();
-		_fruitIsActive = true;
+		_fruitIsActive = false;
 		_fruitObj.SetActive(_fruitIsActive);
 	}
 
@@ -72,14 +71,14 @@ public class LevelManager : MonoBehaviour
 	{
 		if (Snake.instance.HeadGridPosition == _coinPosition)
 		{
-			GameManager.instance.AddCoins(coinValue);
-			SpawnCoinText(coinValue, Utilities.GridToWorld(_coinPosition));
+			GameManager.instance.AddCoins(GameManager.instance.snakeProperties.coinValue);
+			SpawnCoinText(GameManager.instance.snakeProperties.coinValue, Utilities.GridToWorld(_coinPosition));
 			_coinPosition = new(Random.Range(0, gridSize.x), Random.Range(0, gridSize.y));
 			_coinObj.transform.position = Utilities.GridToWorld(_coinPosition);
 			_coin.PlayAnim();
 
 			// Spawn a fruit (maybe ?)
-			if (!_fruitIsActive)
+			if (!_fruitIsActive && Random.value < GameManager.instance.snakeProperties.spawnFruitChance)
 			{
 				_fruitIsActive = true;
 				_fruitObj.SetActive(_fruitIsActive);
@@ -91,8 +90,8 @@ public class LevelManager : MonoBehaviour
 
 		if (_fruitIsActive && Snake.instance.HeadGridPosition == _fruitPosition)
 		{
-			Snake.instance.Heal(100f);
-			SpawnHealText(100f, Utilities.GridToWorld(_fruitPosition));
+			Snake.instance.Heal(GameManager.instance.snakeProperties.fruitValue);
+			SpawnHealText(GameManager.instance.snakeProperties.fruitValue, Utilities.GridToWorld(_fruitPosition));
 			_fruit.StopAnim();
 			_fruitIsActive = false;
 			_fruitObj.SetActive(_fruitIsActive);

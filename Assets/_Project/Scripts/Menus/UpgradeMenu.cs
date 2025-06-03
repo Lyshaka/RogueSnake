@@ -42,6 +42,9 @@ public class UpgradeMenu : MonoBehaviour
 
 	private void Start()
 	{
+		// Load data
+		GameManager.instance.LoadData();
+
 		// Create a new snake data for the new values from the existing data
 		newSnakeData = new(GameManager.instance.snakeData);
 
@@ -82,7 +85,11 @@ public class UpgradeMenu : MonoBehaviour
 
 	public void ButtonValidate()
 	{
-
+		GameManager.instance.snakeData = newSnakeData;
+		GameManager.instance.SpendMoney(_currentMoneySpent);
+		_currentMoneySpent = 0;
+		GameManager.instance.SaveData();
+		UpdateInterface();
 	}
 
 	public void ButtonUp()

@@ -9,25 +9,25 @@ public class MainMenu : MonoBehaviour
 
 	public void ButtonPlay()
 	{
-		Debug.Log("Play !");
+		//Debug.Log("Play !");
 		GameManager.instance.LoadScene(gameScenePath);
 	}
 
 	public void ButtonUpgrade()
 	{
-		Debug.Log("Upgrade !");
+		//Debug.Log("Upgrade !");
 		GameManager.instance.LoadScene(upgradeScenePath);
 	}
 
 	public void ButtonStatistics()
 	{
-		Debug.Log("Statistics !");
+		//Debug.Log("Statistics !");
 		GameManager.instance.LoadScene(statisticsScenePath);
 	}
 
 	public void ButtonQuit()
 	{
-		Debug.Log("Quit !");
+		//Debug.Log("Quit !");
 		Application.Quit();
 	}
 }

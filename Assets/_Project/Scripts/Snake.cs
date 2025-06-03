@@ -1,5 +1,3 @@
-using System.Threading;
-using UnityEditor;
 using UnityEngine;
 
 public class Snake : MonoBehaviour
@@ -8,8 +6,6 @@ public class Snake : MonoBehaviour
 
 	[Header("Properties")]
 	[SerializeField] float speed = 3f;
-	[SerializeField] int length = 3;
-	[SerializeField] float maxHealth = 1000f;
 
 	[Header("Technical")]
 	[SerializeField] GameObject snakeSpritePrefab;
@@ -22,7 +18,6 @@ public class Snake : MonoBehaviour
 	private Vector2Int _moveInput;
 	private Vector2Int _currentDir;
 
-	private int _length = 1;
 	private float _loopDuration;
 
 	private float _loopElapsedTime = 0f;
@@ -45,16 +40,17 @@ public class Snake : MonoBehaviour
 	private void Start()
 	{
 		// Init
+		GameManager.instance.LoadData();
 		_loopDuration = 1f / speed;
-		_health = maxHealth;
-		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
+		_health = GameManager.instance.snakeProperties.maxHealth;
+		UserInterfaceManager.instance.SetHealth(_health, GameManager.instance.snakeProperties.maxHealth);
 
 		// Spawn snake in the center of the grid
 		_head = new(LevelManager.instance.GridCenter, snakeSpritePrefab, transform);
 		_head.obj.name = "Segment_" + _head.index;
 		_tail = _head;
 
-		for (int i = 0; i < length - 1; i++)
+		for (int i = 0; i < GameManager.instance.snakeProperties.snakeLength + 1; i++)
 		{
 			AddSegment();
 		}
@@ -120,20 +116,21 @@ public class Snake : MonoBehaviour
 			_health = 0f;
 			Kill();
 		}
-		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
+		UserInterfaceManager.instance.SetHealth(_health, GameManager.instance.snakeProperties.maxHealth);
 	}
 
 	public void Heal(float value)
 	{
 		_health += value;
-		if (_health > maxHealth)
-			_health = maxHealth;
-		UserInterfaceManager.instance.SetHealth(_health, maxHealth);
+		if (_health > GameManager.instance.snakeProperties.maxHealth)
+			_health = GameManager.instance.snakeProperties.maxHealth;
+		UserInterfaceManager.instance.SetHealth(_health, GameManager.instance.snakeProperties.maxHealth);
 	}
 
 	void Kill()
 	{
 		Debug.Log("Ouch !");
+
 		//Time.timeScale = 0f;
 		//#if UNITY_EDITOR
 		//				EditorApplication.isPlaying = false;
@@ -156,7 +153,7 @@ public class Snake : MonoBehaviour
 		newSegment.obj.name = "Segment_" + newSegment.index;
 		_tail.next = newSegment;
 		_tail = newSegment;
-		_length++;
+		//_length++;
 	}
 
 	void MoveSnake()
