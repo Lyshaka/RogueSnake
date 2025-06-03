@@ -185,6 +185,15 @@ MonoBehaviour:
   fadeImage: {fileID: 5024419966292393538}
   fadeInDuration: 0.2
   fadeOutDuration: 0.2
+  snakeDataCSVPath: RogueSnakeData - Properties
+  snakeDataFileName: snake.data
+  snakeData:
+    money: 0
+    snakeLength: 1
+    maxHealth: 1000
+    spawnFruitChance: 0.1
+    coinValue: 100
+    fruitValue: 100
   coins: 0
 --- !u!1 &7127955217246673358
 GameObject:
