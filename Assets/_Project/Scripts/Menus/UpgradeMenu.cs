@@ -3,8 +3,13 @@ using UnityEngine;
 
 public class UpgradeMenu : MonoBehaviour
 {
-	[Header("Buttons references and properties")]
+	public static UpgradeMenu instance;
+
+	[Header("References and properties")]
 	[SerializeField] string mainMenuPath;
+	[SerializeField] TextMeshProUGUI moneyTMP;
+	[SerializeField] TextMeshProUGUI validateButtonTMP;
+	[SerializeField] PropertyUpgradePanel[] pups; // mdr
 
 	[Header("Snake Segment Sprite")]
 	[SerializeField] float pixelDisplacement = 600f;
@@ -15,6 +20,11 @@ public class UpgradeMenu : MonoBehaviour
 	[Header("Upgrade Snake")]
 	[SerializeField] TextMeshProUGUI titleTMP;
 
+	public GameManager.SnakeData newSnakeData;
+
+	private int _currentMoneySpent;
+	public int CurrentMoneySpent => _currentMoneySpent;
+
 	private int _currentIndex;
 
 	// Snake segment sprite displacement
@@ -22,8 +32,19 @@ public class UpgradeMenu : MonoBehaviour
 	private float _targetPos = 0f;
 	private float _currentVelocity = 0f;
 
+	private void Awake()
+	{
+		if (instance == null)
+			instance = this;
+		else
+			Destroy(gameObject);
+	}
+
 	private void Start()
 	{
+		// Create a new snake data for the new values from the existing data
+		newSnakeData = new(GameManager.instance.snakeData);
+
 		// Spawn snake segments sprites
 		_length = GameManager.instance.snakeProperties.snakeLength + 2; // Accounting for head and tail
 		for (int i = 0; i < _length; i++)
@@ -38,11 +59,20 @@ public class UpgradeMenu : MonoBehaviour
 				ssu.SetSprites(SnakeSegmentUpgrade.SegmentType.Segment);
 		}
 		_currentIndex = 0;
+
+		// Update interface with all the info
+		UpdateInterface();
 	}
 
 	private void Update()
 	{
 		HandleSegmentSprites();
+	}
+
+	public void AddMoneyExpense(int amount)
+	{
+		_currentMoneySpent += amount;
+		UpdateInterface();
 	}
 
 	public void ButtonBack()
@@ -86,5 +116,18 @@ public class UpgradeMenu : MonoBehaviour
 			titleTMP.text = "Segment #" + _currentIndex;
 
 		_targetPos = pixelDisplacement * _currentIndex;
+	}
+
+	void UpdateInterface()
+	{
+		moneyTMP.text = GameManager.instance.snakeData.money.ToString();
+
+		if (_currentMoneySpent > 0)
+			validateButtonTMP.text = $"VALIDATE <color=#FF0000>(-{_currentMoneySpent})";
+		else
+			validateButtonTMP.text = "VALIDATE";
+
+		foreach (var pup in pups)
+			pup.UpdateInterface();
 	}
 }

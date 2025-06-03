@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
 	private string[,] _snakeDataFromCSV;
 
 	// Coins
-	[HideInInspector] public int coins = 0;
+	private int coins = 0;
 
 	// Timer
 	private bool _startedTimer = false;
@@ -88,12 +88,24 @@ public class GameManager : MonoBehaviour
 
 	#endregion
 
-	#region COINS
+	#region MONEY_&_COINS
 	public void AddCoins(int value)
 	{
 		coins += value;
 		UserInterfaceManager.instance.SetCoin(coins);
 	}
+
+	public void SpendMoney(int amount)
+	{
+		snakeData.money -= amount;
+		SaveData();
+	}
+
+	public bool CanSpend(int amount)
+	{
+		return snakeData.money >= amount;
+	}
+
 	#endregion
 
 	#region LEVEL_LOADER
@@ -206,6 +218,58 @@ public class GameManager : MonoBehaviour
 		Debug.Log("Game Saved at : " + savePath + " !\n" + json);
 	}
 
+	public string[] GetProperties(DataType type, SnakeData snakeData)
+	{
+		string[] str = new string[5];
+		int level;
+
+		switch (type)
+		{
+			case DataType.Health:
+				level = snakeData.healthLevel;
+				str[0] = level.ToString();
+				str[1] = "Maximum Health";
+				str[2] = _snakeDataFromCSV[level, 0];
+				str[3] = level < 50 ? $"(+{float.Parse(_snakeDataFromCSV[level + 1, 0]) - float.Parse(_snakeDataFromCSV[level, 0])})" : "";
+				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 1] : "";
+				break;
+			case DataType.Length:
+				level = snakeData.lengthLevel;
+				str[0] = level.ToString();
+				str[1] = "Snake Length";
+				str[2] = _snakeDataFromCSV[level, 2];
+				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 2]) - int.Parse(_snakeDataFromCSV[level, 2])})" : "";
+				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 3] : "";
+				break;
+			case DataType.CoinValue:
+				level = snakeData.coinValueLevel;
+				str[0] = level.ToString();
+				str[1] = "Coin Value";
+				str[2] = _snakeDataFromCSV[level, 4];
+				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 4]) - int.Parse(_snakeDataFromCSV[level, 4])})" : "";
+				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 5] : "";
+				break;
+			case DataType.FruitChance:
+				level = snakeData.fruitChanceLevel;
+				str[0] = level.ToString();
+				str[1] = "Fruit Chance";
+				str[2] = $"{(float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture) * 100f):0.}%";
+				str[3] = level < 50 ? $"(+{((float.Parse(_snakeDataFromCSV[level + 1, 6], CultureInfo.InvariantCulture) - float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture)) * 100f):0.}%)" : "";
+				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 7] : "";
+				break;
+			case DataType.FruitValue:
+				level = snakeData.fruitValueLevel;
+				str[0] = level.ToString();
+				str[1] = "Fruit Value";
+				str[2] = _snakeDataFromCSV[level, 8];
+				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 8]) - int.Parse(_snakeDataFromCSV[level, 8])})" : "";
+				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 9] : "";
+				break;
+		}
+
+		return str;
+	}
+
 	public class SnakeProperties
 	{
 		// Properties
@@ -250,6 +314,62 @@ public class GameManager : MonoBehaviour
 		public int coinValueLevel = 0;
 		public int fruitChanceLevel = 0;
 		public int fruitValueLevel = 0;
+
+		public SnakeData() { }
+
+		public SnakeData(SnakeData other)
+		{
+			money = other.money;
+			healthLevel = other.healthLevel;
+			lengthLevel = other.lengthLevel;
+			coinValueLevel = other.coinValueLevel;
+			fruitChanceLevel = other.fruitChanceLevel;
+			fruitValueLevel = other.fruitValueLevel;
+		}
+
+		public int GetLevel(DataType type)
+		{
+			return type switch
+			{
+				DataType.Health => healthLevel,
+				DataType.Length => lengthLevel,
+				DataType.CoinValue => coinValueLevel,
+				DataType.FruitChance => fruitChanceLevel,
+				DataType.FruitValue => fruitValueLevel,
+				_ => 0,
+			};
+		}
+
+		public void SetLevel(DataType type, int level)
+		{
+			switch (type)
+			{
+				case DataType.Health:
+					healthLevel = level;
+					break;
+				case DataType.Length:
+					lengthLevel = level;
+					break;
+				case DataType.CoinValue:
+					coinValueLevel = level;
+					break;
+				case DataType.FruitChance:
+					fruitChanceLevel = level;
+					break;
+				case DataType.FruitValue:
+					fruitValueLevel = level;
+					break;
+			}
+		}
+	}
+
+	public enum DataType
+	{
+		Health,
+		Length,
+		CoinValue,
+		FruitChance,
+		FruitValue,
 	}
 
 	#endregion
