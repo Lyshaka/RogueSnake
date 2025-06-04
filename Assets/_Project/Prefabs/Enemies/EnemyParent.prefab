@@ -52,7 +52,7 @@ MonoBehaviour:
   detectionRange: 20
   attackRange: 1
   maxHealth: 100
-  damage: 10
+  damage: 1000
   moveSpeed: 5
   coins: 7
   detection: {fileID: 3284246144201700702}

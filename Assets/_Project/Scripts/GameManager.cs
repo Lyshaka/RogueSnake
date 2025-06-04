@@ -30,10 +30,11 @@ public class GameManager : MonoBehaviour
 	private string[,] _snakeDataFromCSV;
 
 	// Coins
-	private int coins = 0;
+	private int _coins = 0;
 
 	// Timer
 	private bool _startedTimer = false;
+	private bool _isGameOver = false;
 	private float _timer = 0f;
 	public bool StartedTimer => _startedTimer;
 
@@ -67,23 +68,55 @@ public class GameManager : MonoBehaviour
 
 	private void Update()
 	{
+		HandleStartGame();
+
 		HandleTimer();
+	}
+
+	public void EnableGameOver()
+	{
+		_startedTimer = false;
+		_isGameOver = true;
+
+		Debug.Log("Timer : " + _timer);
+		Debug.Log("Coins : " + _coins);
+
+		// Update game over panel
+		UserInterfaceManager.instance.EnableGameOver(_timer, _coins, 0);
+
+		// Save data
+		snakeData.money += _coins;
+		SaveData();
+		
+		// Reset data
+		_timer = 0f;
+		_coins = 0;
+
+		// Pause the game
+		Time.timeScale = 0f;
+	}
+
+	void HandleStartGame()
+	{
+		if ((!_startedTimer && !_isGameOver) &&
+			(Input.GetKey(KeyCode.RightArrow) ||
+			Input.GetKey(KeyCode.LeftArrow) ||
+			Input.GetKey(KeyCode.DownArrow) ||
+			Input.GetKey(KeyCode.UpArrow)))
+		{
+			_startedTimer = true;
+		}
 	}
 
 	#region TIMER
 
 	void HandleTimer()
 	{
-		if (!_startedTimer)
+		if (!_startedTimer || _isGameOver)
 			return;
 
 		_timer += Time.deltaTime;
 		UserInterfaceManager.instance.SetTimer(_timer);
-	}
-
-	public void StartTimer()
-	{
-		_startedTimer = true;
 	}
 
 	#endregion
@@ -91,8 +124,8 @@ public class GameManager : MonoBehaviour
 	#region MONEY_&_COINS
 	public void AddCoins(int value)
 	{
-		coins += value;
-		UserInterfaceManager.instance.SetCoin(coins);
+		_coins += value;
+		UserInterfaceManager.instance.SetCoin(_coins);
 	}
 
 	public void SpendMoney(int amount)
@@ -129,13 +162,17 @@ public class GameManager : MonoBehaviour
 		while (elapsedTime < fadeInDuration)
 		{
 			fadeImage.color = new(0f, 0f, 0f, elapsedTime / fadeInDuration);
-			elapsedTime += Time.deltaTime;
+			elapsedTime += Time.unscaledDeltaTime;
 			yield return null;
 		}
 		fadeImage.color = new(0f, 0f, 0f, 1f); // Full black
 
 		// Skip a frame (just to be sure)
 		yield return null;
+
+		// Destroy all projectiles
+		for (int i = bulletParent.childCount - 1; i >= 0; i--)
+			Destroy(bulletParent.GetChild(i).gameObject);
 
 		AsyncOperation asyncOperation =	SceneManager.LoadSceneAsync(path);
 
@@ -153,13 +190,19 @@ public class GameManager : MonoBehaviour
 		while (elapsedTime < fadeOutDuration)
 		{
 			fadeImage.color = new(0f, 0f, 0f, 1f - (elapsedTime / fadeOutDuration));
-			elapsedTime += Time.deltaTime;
+			elapsedTime += Time.unscaledDeltaTime;
 			yield return null;
 		}
 		fadeImage.color = new(0f, 0f, 0f, 0f); // Full transparent
 
 		// Skip a frame (just to be sure)
 		yield return null;
+
+		// Set time scale back to normal
+		Time.timeScale = 1f;
+
+		// Reset game over flag
+		_isGameOver = false;
 
 		_isLevelLoading = false;
 	}

@@ -20,6 +20,14 @@ public class UserInterfaceManager : MonoBehaviour
 	[Header("Timer")]
 	[SerializeField] TextMeshProUGUI timerText;
 
+	[Header("Game Over panel")]
+	[SerializeField] GameObject gameOverPanel;
+	[SerializeField] TextMeshProUGUI gameOverTimeTMP;
+	[SerializeField] TextMeshProUGUI gameOverCoinTMP;
+	[SerializeField] TextMeshProUGUI gameOverKillTMP;
+
+	[Header("Other")]
+	[SerializeField] string mainMenuPath;
 
 	float _coinElapsedTime = 0f;
 
@@ -31,6 +39,11 @@ public class UserInterfaceManager : MonoBehaviour
 			Destroy(gameObject);
 	}
 
+	private void Start()
+	{
+		gameOverPanel.SetActive(false);
+	}
+
 	private void Update()
 	{
 		if (_coinElapsedTime > 0f)
@@ -38,6 +51,25 @@ public class UserInterfaceManager : MonoBehaviour
 			coinTransform.localScale = Mathf.Lerp(1f, 1.2f, _coinElapsedTime / coinGrowDuration) * Vector3.one;
 			_coinElapsedTime -= Time.deltaTime;
 		}
+	}
+
+	public void EnableGameOver(float timerSeconds, int coins, int kills)
+	{
+		int hours = (int)(timerSeconds / 3600);
+		int minutes = (int)((timerSeconds % 3600) / 60);
+		int seconds = (int)(timerSeconds % 60);
+		int milliseconds = (int)((timerSeconds - MathF.Floor(timerSeconds)) * 1000);
+
+		gameOverTimeTMP.text = $"<mspace=23>{hours:00}</mspace>:<mspace=23>{minutes:00}</mspace>:<mspace=23>{seconds:00}</mspace>:<mspace=23>{milliseconds:000}</mspace>";
+		gameOverCoinTMP.text = coins.ToString();
+		gameOverKillTMP.text = kills.ToString();
+
+		gameOverPanel.SetActive(true);
+	}
+
+	public void BackToMenu()
+	{
+		GameManager.instance.LoadScene(mainMenuPath);
 	}
 
 	public void SetHealth(float health, float healthMax)

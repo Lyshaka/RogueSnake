@@ -10,6 +10,8 @@ public class Snake : MonoBehaviour
 	[Header("Technical")]
 	[SerializeField] GameObject snakeSpritePrefab;
 
+	private bool _isKilled = false;
+
 	private float _health;
 
 	private Segment _head;
@@ -41,6 +43,7 @@ public class Snake : MonoBehaviour
 	{
 		// Init
 		GameManager.instance.LoadData();
+		_currentDir = Vector2Int.zero;
 		_loopDuration = 1f / speed;
 		_health = GameManager.instance.snakeProperties.maxHealth;
 		UserInterfaceManager.instance.SetHealth(_health, GameManager.instance.snakeProperties.maxHealth);
@@ -89,10 +92,10 @@ public class Snake : MonoBehaviour
 		if (_moveInput != Vector2Int.zero)
 			_currentDir = _moveInput;
 
-		if (!GameManager.instance.StartedTimer && _currentDir != Vector2Int.zero)
-		{
-			GameManager.instance.StartTimer();
-		}
+		//if (!GameManager.instance.StartedTimer && _currentDir != Vector2Int.zero)
+		//{
+		//	GameManager.instance.StartGame();
+		//}
 
 		if (_loopElapsedTime < _loopDuration)
 		{
@@ -129,15 +132,11 @@ public class Snake : MonoBehaviour
 
 	void Kill()
 	{
-		Debug.Log("Ouch !");
-
-		//Time.timeScale = 0f;
-		//#if UNITY_EDITOR
-		//				EditorApplication.isPlaying = false;
-		//#else
-		//				Application.Quit();
-		//#endif
-
+		if (!_isKilled)
+		{
+			_isKilled = true;
+			GameManager.instance.EnableGameOver();
+		}
 	}
 
 	void AddSegment()
@@ -190,11 +189,11 @@ public class Snake : MonoBehaviour
 		}
 
 		// Check if the snake hit a wall
-		if (_head.pos.x < 0 || _head.pos.x >= LevelManager.instance.GridSize.x ||
-			_head.pos.y < 0 || _head.pos.y >= LevelManager.instance.GridSize.y)
-		{
-			Kill();
-		}
+		//if (_head.pos.x < 0 || _head.pos.x >= LevelManager.instance.GridSize.x ||
+		//	_head.pos.y < 0 || _head.pos.y >= LevelManager.instance.GridSize.y)
+		//{
+		//	Kill();
+		//}
 
 		// Check if the snake hit itself
 		current = _head.next;
