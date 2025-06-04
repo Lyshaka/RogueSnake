@@ -23,7 +23,6 @@ public class PropertyUpgradePanel : MonoBehaviour
 		_snakeData = UpgradeMenu.instance.newSnakeData;
 		_level = _snakeData.GetLevel(type);
 		string[] properties = GameManager.instance.GetProperties(type, _snakeData);
-		_currentCost = int.Parse(properties[4]);
 		SetValues(properties);
 	}
 
@@ -34,9 +33,8 @@ public class PropertyUpgradePanel : MonoBehaviour
 
 		_level++;
 		_snakeData.SetLevel(type, _level);
-		string[] properties = GameManager.instance.GetProperties(type, _snakeData);
 		UpgradeMenu.instance.AddMoneyExpense(_currentCost);
-		_currentCost = int.Parse(properties[4]);
+		string[] properties = GameManager.instance.GetProperties(type, _snakeData);
 		SetValues(properties);
 	}
 
@@ -54,11 +52,16 @@ public class PropertyUpgradePanel : MonoBehaviour
 		contentTMP.text = values[1];
 		valueTMP.text = values[2];
 		upgradedValueTMP.text = values[3];
-		if (values[4] == "")
-			buttonObject.SetActive(false);
-		else
+		if (values[4] != "")
+		{
 			costTMP.text = values[4];
+			_currentCost = int.Parse(values[4]);
+		}
+		else
+		{
+			buttonObject.SetActive(false);
+		}
 
-		UpdateInterface();
+			UpdateInterface();
 	}
 }

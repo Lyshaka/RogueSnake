@@ -183,18 +183,11 @@ MonoBehaviour:
   bulletParent: {fileID: 8099897111238744337}
   feedbacksTextParent: {fileID: 6937329267715370877}
   fadeImage: {fileID: 5024419966292393538}
-  fadeInDuration: 0.2
-  fadeOutDuration: 0.2
+  fadeInDuration: 0.1
+  waitDuration: 0.1
+  fadeOutDuration: 0.1
   snakeDataCSVPath: RogueSnakeData - Properties
   snakeDataFileName: snake.data
-  snakeData:
-    money: 0
-    snakeLength: 1
-    maxHealth: 1000
-    spawnFruitChance: 0.1
-    coinValue: 100
-    fruitValue: 100
-  coins: 0
 --- !u!1 &7127955217246673358
 GameObject:
   m_ObjectHideFlags: 0
@@ -284,7 +277,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0}
+  m_Color: {r: 0.6679245, g: 0.4955086, b: 0.41713774, a: 0}
   m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

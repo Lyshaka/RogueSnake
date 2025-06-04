@@ -10,14 +10,17 @@ public class GameManager : MonoBehaviour
 {
 	public static GameManager instance;
 
+	public const int MAX_LEVEL = 50;
+
 	[Header("Transform parents")]
 	[SerializeField] Transform bulletParent;
 	[SerializeField] Transform feedbacksTextParent;
 
 	[Header("Level loading")]
 	[SerializeField] Image fadeImage;
-	[SerializeField] float fadeInDuration = 0.2f;
-	[SerializeField] float fadeOutDuration = 0.2f;
+	[SerializeField] float fadeInDuration = 0.1f;
+	[SerializeField] float waitDuration = 0.1f;
+	[SerializeField] float fadeOutDuration = 0.1f;
 
 	[Header("Data management")]
 	[SerializeField] string snakeDataCSVPath;
@@ -40,6 +43,7 @@ public class GameManager : MonoBehaviour
 
 	// Scene loading
 	private bool _isLevelLoading = false;
+	private Color _fadeImageBaseColor;
 
 	// Bullets
 	public Transform BulletParent => bulletParent;
@@ -61,6 +65,8 @@ public class GameManager : MonoBehaviour
 
 	private void Start()
 	{
+		_fadeImageBaseColor = fadeImage.color;
+
 		LoadProperties();
 
 		LoadData();
@@ -158,14 +164,19 @@ public class GameManager : MonoBehaviour
 		float elapsedTime;
 
 		// Fade screen to black
-		elapsedTime = 0f;
-		while (elapsedTime < fadeInDuration)
+		if (fadeInDuration > 0f)
 		{
-			fadeImage.color = new(0f, 0f, 0f, elapsedTime / fadeInDuration);
-			elapsedTime += Time.unscaledDeltaTime;
-			yield return null;
+			elapsedTime = 0f;
+			while (elapsedTime < fadeInDuration)
+			{
+				_fadeImageBaseColor.a = elapsedTime / fadeInDuration;
+				fadeImage.color = _fadeImageBaseColor;
+				elapsedTime += Time.unscaledDeltaTime;
+				yield return null;
+			}
+			_fadeImageBaseColor.a = 1f;
+			fadeImage.color = _fadeImageBaseColor; // Set the color to full opacity
 		}
-		fadeImage.color = new(0f, 0f, 0f, 1f); // Full black
 
 		// Skip a frame (just to be sure)
 		yield return null;
@@ -182,18 +193,23 @@ public class GameManager : MonoBehaviour
 			yield return null;
 		}
 
-		// Skip a frame (just to be sure)
-		yield return null;
+		// Wait on the black screen for a certain time
+		yield return new WaitForSecondsRealtime(waitDuration);
 
 		// Fade screen from black
-		elapsedTime = 0f;
-		while (elapsedTime < fadeOutDuration)
+		if (fadeOutDuration > 0f)
 		{
-			fadeImage.color = new(0f, 0f, 0f, 1f - (elapsedTime / fadeOutDuration));
-			elapsedTime += Time.unscaledDeltaTime;
-			yield return null;
+			elapsedTime = 0f;
+			while (elapsedTime < fadeOutDuration)
+			{
+				_fadeImageBaseColor.a = 1f - (elapsedTime / fadeOutDuration);
+				fadeImage.color = _fadeImageBaseColor;
+				elapsedTime += Time.unscaledDeltaTime;
+				yield return null;
+			}
 		}
-		fadeImage.color = new(0f, 0f, 0f, 0f); // Full transparent
+		_fadeImageBaseColor.a = 0f;
+		fadeImage.color = _fadeImageBaseColor; // Set the color to full transparency
 
 		// Skip a frame (just to be sure)
 		yield return null;
@@ -219,8 +235,8 @@ public class GameManager : MonoBehaviour
 		int col = tempArr[0].Split(",").Length - 1;
 		int row = tempArr.Length - 1;
 
-		//Debug.Log("Col : " + col);
-		//Debug.Log("Row : " + row);
+		Debug.Log("Col : " + col);
+		Debug.Log("Row : " + row);
 
 		_snakeDataFromCSV = new string[row, col];
 
@@ -273,40 +289,40 @@ public class GameManager : MonoBehaviour
 				str[0] = level.ToString();
 				str[1] = "Maximum Health";
 				str[2] = _snakeDataFromCSV[level, 0];
-				str[3] = level < 50 ? $"(+{float.Parse(_snakeDataFromCSV[level + 1, 0]) - float.Parse(_snakeDataFromCSV[level, 0])})" : "";
-				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 1] : "";
+				str[3] = level < MAX_LEVEL ? $"(+{float.Parse(_snakeDataFromCSV[level + 1, 0]) - float.Parse(_snakeDataFromCSV[level, 0])})" : "";
+				str[4] = level < MAX_LEVEL ? _snakeDataFromCSV[level + 1, 1] : "";
 				break;
 			case DataType.Length:
 				level = snakeData.lengthLevel;
 				str[0] = level.ToString();
 				str[1] = "Snake Length";
 				str[2] = _snakeDataFromCSV[level, 2];
-				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 2]) - int.Parse(_snakeDataFromCSV[level, 2])})" : "";
-				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 3] : "";
+				str[3] = level < MAX_LEVEL ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 2]) - int.Parse(_snakeDataFromCSV[level, 2])})" : "";
+				str[4] = level < MAX_LEVEL ? _snakeDataFromCSV[level + 1, 3] : "";
 				break;
 			case DataType.CoinValue:
 				level = snakeData.coinValueLevel;
 				str[0] = level.ToString();
 				str[1] = "Coin Value";
 				str[2] = _snakeDataFromCSV[level, 4];
-				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 4]) - int.Parse(_snakeDataFromCSV[level, 4])})" : "";
-				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 5] : "";
+				str[3] = level < MAX_LEVEL ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 4]) - int.Parse(_snakeDataFromCSV[level, 4])})" : "";
+				str[4] = level < MAX_LEVEL ? _snakeDataFromCSV[level + 1, 5] : "";
 				break;
 			case DataType.FruitChance:
 				level = snakeData.fruitChanceLevel;
 				str[0] = level.ToString();
 				str[1] = "Fruit Chance";
-				str[2] = $"{(float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture) * 100f):0.}%";
-				str[3] = level < 50 ? $"(+{((float.Parse(_snakeDataFromCSV[level + 1, 6], CultureInfo.InvariantCulture) - float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture)) * 100f):0.}%)" : "";
-				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 7] : "";
+				str[2] = $"{(float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture) * 100f):0.0#}%";
+				str[3] = level < MAX_LEVEL ? $"(+{((float.Parse(_snakeDataFromCSV[level + 1, 6], CultureInfo.InvariantCulture) - float.Parse(_snakeDataFromCSV[level, 6], CultureInfo.InvariantCulture)) * 100f):0.0#}%)" : "";
+				str[4] = level < MAX_LEVEL ? _snakeDataFromCSV[level + 1, 7] : "";
 				break;
 			case DataType.FruitValue:
 				level = snakeData.fruitValueLevel;
 				str[0] = level.ToString();
 				str[1] = "Fruit Value";
 				str[2] = _snakeDataFromCSV[level, 8];
-				str[3] = level < 50 ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 8]) - int.Parse(_snakeDataFromCSV[level, 8])})" : "";
-				str[4] = level < 50 ? _snakeDataFromCSV[level + 1, 9] : "";
+				str[3] = level < MAX_LEVEL ? $"(+{int.Parse(_snakeDataFromCSV[level + 1, 8]) - int.Parse(_snakeDataFromCSV[level, 8])})" : "";
+				str[4] = level < MAX_LEVEL ? _snakeDataFromCSV[level + 1, 9] : "";
 				break;
 		}
 

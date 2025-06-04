@@ -81,7 +81,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   range: 10
   attackFrequency: 5
-  damage: 15
+  damage: 25
   projectileSpeed: 20
   canonTransform: {fileID: 7448107384775468917}
   bulletPrefab: {fileID: 4235825694687685927, guid: ba04c38d6b82dc041b6514a2d1f57db6, type: 3}
