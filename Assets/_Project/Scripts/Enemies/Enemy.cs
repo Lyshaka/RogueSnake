@@ -13,7 +13,8 @@ public class Enemy : MonoBehaviour
 
 	[Header("Technical")]
 	[SerializeField] EnemyDetection detection;
-	[SerializeField] SpriteRenderer spriteRenderer;
+	[SerializeField] SpriteRenderer enemySpriteRenderer;
+	[SerializeField] SpriteRenderer blinkSpriteRenderer;
 	[SerializeField] GameObject damageNumberPrefab;
 
 	private NavMeshAgent _agent;
@@ -58,17 +59,18 @@ public class Enemy : MonoBehaviour
 
 	void HandleDamageBlink()
 	{
-		if (_blinkElapsedTime < _blinkDuration)
+		if (_blinkElapsedTime > 0f)
 		{
-			spriteRenderer.color = Color.Lerp(new(0.8f, 0.4f, 0.4f, 0.95f), Color.white, _blinkElapsedTime / _blinkDuration);
-			_blinkElapsedTime += Time.deltaTime;
+			blinkSpriteRenderer.color = new(1f, 1f, 1f, _blinkElapsedTime / _blinkDuration);
+			_blinkElapsedTime -= Time.deltaTime;
 		}
 	}
 
 	public void Damage(float value, Turret origin, Vector3 projectileDirection)
 	{
 		_health -= value;
-		_blinkElapsedTime = 0f;
+		_blinkElapsedTime = _blinkDuration;
+		enemySpriteRenderer.color = new Color((_health / maxHealth) * 0.9f, (_health / maxHealth) * 0.9f, (_health / maxHealth) * 0.9f, 1f);
 		GameObject obj = Instantiate(damageNumberPrefab, transform.position, Quaternion.identity, GameManager.instance.FeedbackTextParent);
 		obj.GetComponent<DamageText>().Setup(value, projectileDirection);
 		if (_health <= 0f && !_isDead)
