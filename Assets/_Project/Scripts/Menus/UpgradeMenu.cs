@@ -75,8 +75,6 @@ public class UpgradeMenu : MonoBehaviour
 	public void AddMoneyExpense(int amount)
 	{
 		_currentMoneySpent += amount;
-		GameManager.instance.snakeStats.AddMoneySpent(amount);
-		GameManager.instance.SaveStatistics();
 		UpdateInterface();
 	}
 
@@ -88,6 +86,8 @@ public class UpgradeMenu : MonoBehaviour
 	public void ButtonValidate()
 	{
 		GameManager.instance.snakeData = newSnakeData;
+		GameManager.instance.snakeStats.AddMoneySpent(_currentMoneySpent);
+		GameManager.instance.SaveStatistics();
 		GameManager.instance.SpendMoney(_currentMoneySpent);
 		_currentMoneySpent = 0;
 		GameManager.instance.SaveData();
