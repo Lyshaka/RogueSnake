@@ -98,6 +98,7 @@ public class SnakeSegment : MonoBehaviour
 		{
 			GameObject obj = Instantiate(turretPrefab, _segment.obj.transform.position, Quaternion.identity, _segment.obj.transform);
 			_turret = obj.GetComponentInChildren<Turret>();
+			_turret.Setup(GameManager.instance.GetTurretProperties(_segment.index - 1));
 		}
 	}
 

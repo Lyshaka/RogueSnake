@@ -24,15 +24,19 @@ public class GameManager : MonoBehaviour
 
 	[Header("Data management")]
 	[SerializeField] string snakeDataCSVPath;
+	[SerializeField] string turretDataCSVPath;
 	[SerializeField] string snakeDataFileName = "snake.data";
 	[SerializeField] string snakeStatFileName = "stats.data";
+	[SerializeField] string turretDataFileName = "turrets.data";
 
 
 	// Data
+	private string[,] _snakeDataFromCSV;
+	private string[,] _turretDataFromCSV;
 	[HideInInspector] public SnakeData snakeData = new();
 	[HideInInspector] public SnakeProperties snakeProperties;
 	[HideInInspector] public SnakeStatistics snakeStats;
-	private string[,] _snakeDataFromCSV;
+	[HideInInspector] public TurretsData turretsData;
 
 	// Coins
 	private int _coins = 0;
@@ -76,10 +80,10 @@ public class GameManager : MonoBehaviour
 		_fadeImageBaseColor = fadeImage.color;
 
 		LoadProperties();
-
-		LoadStatistics();
-
 		LoadData();
+		LoadTurretProperties();
+		LoadTurretData();
+		LoadStatistics();
 	}
 
 	private void Update()
@@ -258,7 +262,7 @@ public class GameManager : MonoBehaviour
 
 	#endregion
 
-	#region DATA
+	#region SNAKE_DATA
 
 	public void LoadProperties()
 	{
@@ -290,7 +294,7 @@ public class GameManager : MonoBehaviour
 		if (!File.Exists(savePath))
 		{
 			snakeStats = new();
-			SaveData();
+			SaveStatistics();
 			return;
 		}
 
@@ -383,14 +387,14 @@ public class GameManager : MonoBehaviour
 		return str;
 	}
 
-	public class SnakeProperties
+	public struct SnakeProperties
 	{
 		// Properties
-		public float maxHealth = 1000f;
-		public int snakeLength = 1; // Doesn't include head and tail
-		public int coinValue = 100; // Amount of money a coin gets
-		public float spawnFruitChance = 0.1f; // Value between 0 and 1 (percentage)
-		public float fruitValue = 100f; // Amount of health a fruit gets
+		public float maxHealth;
+		public int snakeLength; // Doesn't include head and tail
+		public int coinValue; // Amount of money a coin gets
+		public float spawnFruitChance; // Value between 0 and 1 (percentage)
+		public float fruitValue; // Amount of health a fruit gets
 
 		// Costs
 		public int maxHealthCost;
@@ -534,6 +538,122 @@ public class GameManager : MonoBehaviour
 		CoinValue,
 		FruitChance,
 		FruitValue,
+	}
+
+	#endregion
+
+	#region TURRET_DATA
+
+	public void LoadTurretData()
+	{
+		string savePath = Path.Combine(Application.persistentDataPath, turretDataFileName);
+
+		if (!File.Exists(savePath))
+		{
+			turretsData = new(snakeProperties.snakeLength);
+			SaveTurretData();
+			return;
+		}
+
+		string json = File.ReadAllText(savePath);
+		turretsData = JsonUtility.FromJson<TurretsData>(json);
+	}
+
+	public void SaveTurretData()
+	{
+		string savePath = Path.Combine(Application.persistentDataPath, turretDataFileName);
+
+		string json = JsonUtility.ToJson(turretsData, true);
+		File.WriteAllText(savePath, json);
+	}
+
+	void LoadTurretProperties()
+	{
+		TextAsset temp = Resources.Load<TextAsset>(turretDataCSVPath);
+		string[] tempArr = temp.text.Split("\r\n");
+
+		int col = tempArr[0].Split(",").Length - 1;
+		int row = tempArr.Length - 1;
+
+		//Debug.Log("Col : " + col);
+		//Debug.Log("Row : " + row);
+
+		_turretDataFromCSV = new string[row, col];
+
+		for (int i = 0; i < row; i++)
+		{
+			for (int j = 0; j < col; j++)
+			{
+				_turretDataFromCSV[i, j] = tempArr[i + 1].Split(",")[j + 1];
+				//Debug.Log($"Data {i},{j} : {_turretDataFromCSV[i, j]}");
+			}
+		}
+	}
+
+	public TurretProperties GetTurretProperties(int segmentIndex)
+	{
+		return new(turretsData.data[segmentIndex], _turretDataFromCSV);
+	}
+
+	public struct TurretProperties
+	{
+		public float damage;
+		public float attackSpeed;
+		public float range;
+		public float projectileSpeed;
+
+		public TurretProperties(TurretData data, string[,] csvData)
+		{
+			damage = float.Parse(csvData[data.damageLevel, 0], CultureInfo.InvariantCulture);
+			attackSpeed = float.Parse(csvData[data.attackSpeedLevel, 1], CultureInfo.InvariantCulture);
+			range = float.Parse(csvData[data.rangeLevel, 2], CultureInfo.InvariantCulture);
+			projectileSpeed = float.Parse(csvData[data.projectileSpeedLevel, 3], CultureInfo.InvariantCulture);
+		}
+	}
+
+	[Serializable]
+	public class TurretData
+	{
+		public int damageLevel = 0;
+		public int attackSpeedLevel = 0;
+		public int rangeLevel = 0;
+		public int projectileSpeedLevel = 0;
+
+		public TurretData() { }
+
+		public TurretData(TurretData other)
+		{
+			damageLevel = other.damageLevel;
+			attackSpeedLevel = other.attackSpeedLevel;
+			rangeLevel = other.rangeLevel;
+			projectileSpeedLevel = other.projectileSpeedLevel;
+		}
+	}
+
+	[Serializable]
+	public class TurretsData
+	{
+		public TurretData[] data;
+
+		public TurretsData(TurretData[] data)
+		{
+			this.data = data;
+		}
+
+		public TurretsData(int length) 
+		{
+			data = new TurretData[length];
+			for (int i = 0; i < length; i++)
+				data[i] = new TurretData();
+		}
+
+		public void AddSegment()
+		{
+			TurretData[] newData = new TurretData[data.Length + 1];
+			for (int i = 0;i < data.Length;i++)
+				newData[i] = data[i];
+			newData[data.Length + 1] = new TurretData();
+		}
 	}
 
 	#endregion

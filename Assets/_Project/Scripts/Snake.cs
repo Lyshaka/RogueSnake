@@ -152,7 +152,6 @@ public class Snake : MonoBehaviour
 		newSegment.obj.name = "Segment_" + newSegment.index;
 		_tail.next = newSegment;
 		_tail = newSegment;
-		//_length++;
 	}
 
 	void MoveSnake()

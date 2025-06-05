@@ -187,7 +187,10 @@ MonoBehaviour:
   waitDuration: 0.1
   fadeOutDuration: 0.1
   snakeDataCSVPath: RogueSnakeData - Properties
+  turretDataCSVPath: RogueSnakeData - Turret
   snakeDataFileName: snake.data
+  snakeStatFileName: stats.data
+  turretDataFileName: turrets.data
 --- !u!1 &7127955217246673358
 GameObject:
   m_ObjectHideFlags: 0

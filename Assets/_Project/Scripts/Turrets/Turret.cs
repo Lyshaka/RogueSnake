@@ -19,11 +19,15 @@ public class Turret : MonoBehaviour
 
 	private float _shootDelay;
 	private float _shootElapsedTime;
+	private float _damage;
+	private float _projectileSpeed;
 
 	private void Start()
 	{
-		GetComponent<SphereCollider>().radius = range;
-		_shootDelay = 1f / attackFrequency;
+		//GetComponent<SphereCollider>().radius = range;
+		//_shootDelay = 1f / attackFrequency;
+		//_damage = damage;
+		//_projectileSpeed = projectileSpeed;
 	}
 
 	private void Update()
@@ -48,10 +52,18 @@ public class Turret : MonoBehaviour
 			if (_target != null)
 			{
 				GameObject obj = Instantiate(bulletPrefab, transform.position, canonTransform.rotation, GameManager.instance.BulletParent);
-				obj.GetComponent<Bullet>().Setup(damage, projectileSpeed, this);
+				obj.GetComponent<Bullet>().Setup(_damage, _projectileSpeed, this);
 			}
 			_shootElapsedTime -= _shootDelay;
 		}
+	}
+
+	public void Setup(GameManager.TurretProperties properties)
+	{
+		GetComponent<SphereCollider>().radius = properties.range;
+		_shootDelay = 1f / properties.attackSpeed;
+		_damage = properties.damage;
+		_projectileSpeed = properties.projectileSpeed;
 	}
 
 	public void RemoveFromTargets(Enemy enemy)
