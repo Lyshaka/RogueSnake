@@ -331,6 +331,14 @@ public class GameManager : MonoBehaviour
 		File.WriteAllText(savePath, json);
 	}
 
+	public void DeleteAllData()
+	{
+		snakeData = new();
+		snakeStats = new();
+		SaveStatistics();
+		SaveData();
+	}
+
 	public string[] GetProperties(DataType type, SnakeData snakeData)
 	{
 		string[] str = new string[5];
