@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Globalization;
 using UnityEngine;
 
 public static class Utilities
@@ -41,4 +43,58 @@ public static class Utilities
 	{
 		return new((int)worldPos.x, (int)worldPos.z);
 	}
+
+	public static string TimeToString(float totalSeconds)
+	{
+		int hours = (int)(totalSeconds / 3600);
+		int minutes = (int)((totalSeconds % 3600) / 60);
+		int seconds = (int)(totalSeconds % 60);
+		int milliseconds = (int)((totalSeconds - MathF.Floor(totalSeconds)) * 1000);
+
+		return $"{hours:00}:{minutes:00}:{seconds:00}:{milliseconds:000}";
+	}
+
+	public static string TimeToString(float totalSeconds, int spacing)
+	{
+		int hours = (int)(totalSeconds / 3600);
+		int minutes = (int)((totalSeconds % 3600) / 60);
+		int seconds = (int)(totalSeconds % 60);
+		int milliseconds = (int)((totalSeconds - MathF.Floor(totalSeconds)) * 1000);
+
+		return $"<mspace={spacing}>{hours:00}</mspace>:<mspace={spacing}>{minutes:00}</mspace>:<mspace={spacing}>{seconds:00}</mspace>:<mspace={spacing}>{milliseconds:000}</mspace>";
+	}
+
+	public static string Parse(object input, ParseType type, int spacing = -1)
+	{
+		switch (type)
+		{
+			case ParseType.Time:
+				if (spacing < 0)
+					return TimeToString((float)input);
+				else
+					return TimeToString((float)input, spacing);
+			case ParseType.Integer:
+				return $"{input}";
+			case ParseType.Percentage:
+				if (input is string str)
+					return $"{(float.Parse(str, CultureInfo.InvariantCulture) * 100f):0.0#}%";
+				else if (input is float f)
+					return $"{(f * 100f):0.0#}%";
+				return "";
+			case ParseType.Text:
+				return (string)input;
+			default:
+				return "";
+			}
+	}
+
+
+	public enum ParseType
+	{
+		Time,
+		Integer,
+		Percentage,
+		Text,
+	}
+
 }

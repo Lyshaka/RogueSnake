@@ -79,6 +79,7 @@ public class Enemy : MonoBehaviour
 			origin.RemoveFromTargets(this);
 			EnemySpawner.instance.RemoveFromCap();
 			GameManager.instance.AddCoins(coins);
+			GameManager.instance.AddEnemyKilled();
 			LevelManager.instance.SpawnCoinText(coins, transform.position);
 			Destroy(gameObject);
 		}

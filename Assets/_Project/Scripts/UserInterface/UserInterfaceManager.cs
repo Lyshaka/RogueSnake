@@ -25,6 +25,7 @@ public class UserInterfaceManager : MonoBehaviour
 	[SerializeField] TextMeshProUGUI gameOverTimeTMP;
 	[SerializeField] TextMeshProUGUI gameOverCoinTMP;
 	[SerializeField] TextMeshProUGUI gameOverKillTMP;
+	[SerializeField] TextMeshProUGUI gameOverDamagesTMP;
 
 	[Header("Other")]
 	[SerializeField] string mainMenuPath;
@@ -53,16 +54,12 @@ public class UserInterfaceManager : MonoBehaviour
 		}
 	}
 
-	public void EnableGameOver(float timerSeconds, int coins, int kills)
+	public void EnableGameOver(float timerSeconds, int coins, int kills, float damages)
 	{
-		int hours = (int)(timerSeconds / 3600);
-		int minutes = (int)((timerSeconds % 3600) / 60);
-		int seconds = (int)(timerSeconds % 60);
-		int milliseconds = (int)((timerSeconds - MathF.Floor(timerSeconds)) * 1000);
-
-		gameOverTimeTMP.text = $"<mspace=23>{hours:00}</mspace>:<mspace=23>{minutes:00}</mspace>:<mspace=23>{seconds:00}</mspace>:<mspace=23>{milliseconds:000}</mspace>";
+		gameOverTimeTMP.text = Utilities.TimeToString(timerSeconds, 23);
 		gameOverCoinTMP.text = coins.ToString();
 		gameOverKillTMP.text = kills.ToString();
+		gameOverDamagesTMP.text = damages.ToString();
 
 		gameOverPanel.SetActive(true);
 	}
@@ -91,11 +88,6 @@ public class UserInterfaceManager : MonoBehaviour
 
 	public void SetTimer(float totalSeconds)
 	{
-		int hours = (int)(totalSeconds / 3600);
-		int minutes = (int)((totalSeconds % 3600) / 60);
-		int seconds = (int)(totalSeconds % 60);
-		int milliseconds = (int)((totalSeconds - MathF.Floor(totalSeconds)) * 1000);
-
-		timerText.text = $"<mspace=36>{hours:00}</mspace>:<mspace=36>{minutes:00}</mspace>:<mspace=36>{seconds:00}</mspace>:<mspace=36>{milliseconds:000}</mspace>";
+		timerText.text = Utilities.TimeToString(totalSeconds, 36);
 	}
 }

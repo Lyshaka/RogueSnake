@@ -20,7 +20,8 @@ public class Bullet : MonoBehaviour
 		if (other.gameObject.layer == 10) // Enemy
 		{
 			other.GetComponent<Enemy>().Damage(_damage, _origin, transform.forward);
+			GameManager.instance.AddDamage(_damage);
 			Destroy(gameObject);
-		}
+;		}
 	}
 }

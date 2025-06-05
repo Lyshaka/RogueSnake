@@ -25,11 +25,13 @@ public class GameManager : MonoBehaviour
 	[Header("Data management")]
 	[SerializeField] string snakeDataCSVPath;
 	[SerializeField] string snakeDataFileName = "snake.data";
+	[SerializeField] string snakeStatFileName = "stats.data";
 
 
 	// Data
 	[HideInInspector] public SnakeData snakeData = new();
 	[HideInInspector] public SnakeProperties snakeProperties;
+	[HideInInspector] public SnakeStatistics snakeStats;
 	private string[,] _snakeDataFromCSV;
 
 	// Coins
@@ -40,6 +42,12 @@ public class GameManager : MonoBehaviour
 	private bool _isGameOver = false;
 	private float _timer = 0f;
 	public bool StartedTimer => _startedTimer;
+
+	// Enemies
+	private int _enemiesKilled;
+
+	// Damages
+	private float _damages;
 
 	// Scene loading
 	private bool _isLevelLoading = false;
@@ -69,6 +77,8 @@ public class GameManager : MonoBehaviour
 
 		LoadProperties();
 
+		LoadStatistics();
+
 		LoadData();
 	}
 
@@ -84,19 +94,24 @@ public class GameManager : MonoBehaviour
 		_startedTimer = false;
 		_isGameOver = true;
 
-		Debug.Log("Timer : " + _timer);
-		Debug.Log("Coins : " + _coins);
-
 		// Update game over panel
-		UserInterfaceManager.instance.EnableGameOver(_timer, _coins, 0);
+		UserInterfaceManager.instance.EnableGameOver(_timer, _coins, _enemiesKilled, _damages);
 
 		// Save data
 		snakeData.money += _coins;
 		SaveData();
-		
+
+		// Save stats
+		snakeStats.AddMoneyEarned(snakeData.money);
+		snakeStats.AddPlayTime(_timer);
+		snakeStats.AddEnemiesKilled(_enemiesKilled);
+		snakeStats.AddTurretDamage(_damages);
+		SaveStatistics();
+
 		// Reset data
 		_timer = 0f;
 		_coins = 0;
+		_enemiesKilled = 0;
 
 		// Pause the game
 		Time.timeScale = 0f;
@@ -143,6 +158,24 @@ public class GameManager : MonoBehaviour
 	public bool CanSpend(int amount)
 	{
 		return snakeData.money >= amount;
+	}
+
+	#endregion
+
+	#region ENEMIES
+
+	public void AddEnemyKilled()
+	{
+		_enemiesKilled++;
+	}
+
+	#endregion
+
+	#region DAMAGE
+
+	public void AddDamage(float damage)
+	{
+		_damages += damage;
 	}
 
 	#endregion
@@ -235,8 +268,8 @@ public class GameManager : MonoBehaviour
 		int col = tempArr[0].Split(",").Length - 1;
 		int row = tempArr.Length - 1;
 
-		Debug.Log("Col : " + col);
-		Debug.Log("Row : " + row);
+		//Debug.Log("Col : " + col);
+		//Debug.Log("Row : " + row);
 
 		_snakeDataFromCSV = new string[row, col];
 
@@ -248,6 +281,29 @@ public class GameManager : MonoBehaviour
 				//Debug.Log($"Data {i},{j} : {_snakeDataFromCSV[i, j]}");
 			}
 		}
+	}
+
+	public void LoadStatistics()
+	{
+		string savePath = Path.Combine(Application.persistentDataPath, snakeStatFileName);
+
+		if (!File.Exists(savePath))
+		{
+			snakeStats = new();
+			SaveData();
+			return;
+		}
+
+		string json = File.ReadAllText(savePath);
+		snakeStats = JsonUtility.FromJson<SnakeStatistics>(json);
+	}
+
+	public void SaveStatistics()
+	{
+		string savePath = Path.Combine(Application.persistentDataPath, snakeStatFileName);
+
+		string json = JsonUtility.ToJson(snakeStats, true);
+		File.WriteAllText(savePath, json);
 	}
 
 	public void LoadData()
@@ -265,7 +321,6 @@ public class GameManager : MonoBehaviour
 		string json = File.ReadAllText(savePath);
 		snakeData = JsonUtility.FromJson<SnakeData>(json);
 		snakeProperties = new(snakeData, _snakeDataFromCSV);
-		Debug.Log("Game Loaded from : " + savePath + " !\n" + json);
 	}
 
 	public void SaveData()
@@ -274,7 +329,6 @@ public class GameManager : MonoBehaviour
 
 		string json = JsonUtility.ToJson(snakeData, true);
 		File.WriteAllText(savePath, json);
-		Debug.Log("Game Saved at : " + savePath + " !\n" + json);
 	}
 
 	public string[] GetProperties(DataType type, SnakeData snakeData)
@@ -361,6 +415,57 @@ public class GameManager : MonoBehaviour
 
 			fruitValue = float.Parse(csvData[data.fruitValueLevel, 8], CultureInfo.InvariantCulture);
 			fruitValueCost = int.Parse(csvData[data.fruitValueLevel, 9], CultureInfo.InvariantCulture);
+		}
+	}
+
+	public class SnakeStatistics
+	{
+		public float totalPlaytime;
+		public int totalMoneyEarned;
+		public int totalMoneySpent;
+		public int totalEnemiesKilled;
+		public float totalTurretDamage;
+
+		public float longestPlaytime;
+		public int mostMoneyEarned;
+		public int mostEnemiesKilled;
+		public float mostTurretDamage;
+
+		public void AddPlayTime(float time)
+		{
+			if (time > longestPlaytime)
+				longestPlaytime = time;
+
+			totalPlaytime += time;
+		}
+
+		public void AddMoneyEarned(int money)
+		{
+			if (money > mostMoneyEarned)
+				mostMoneyEarned = money;
+
+			totalMoneyEarned += money;
+		}
+
+		public void AddMoneySpent(int money)
+		{
+			totalMoneySpent += money;
+		}
+
+		public void AddEnemiesKilled(int kills)
+		{
+			if (kills > mostEnemiesKilled)
+				mostEnemiesKilled = kills;
+
+			totalEnemiesKilled += kills;
+		}
+
+		public void AddTurretDamage(float damage)
+		{
+			if (damage > mostTurretDamage)
+				mostTurretDamage = damage;
+
+			totalTurretDamage += damage;
 		}
 	}
 
