@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
 		SaveData();
 
 		// Save stats
-		snakeStats.AddMoneyEarned(snakeData.money);
+		snakeStats.AddMoneyEarned(_coins);
 		snakeStats.AddPlayTime(_timer);
 		snakeStats.AddEnemiesKilled(_enemiesKilled);
 		snakeStats.AddTurretDamage(_damages);
