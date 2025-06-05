@@ -79,9 +79,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2d9bc161d8617ae43a55d6a3154f2b03, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  range: 10
+  range: 12
   attackFrequency: 5
-  damage: 7
+  damage: 15
   projectileSpeed: 20
   canonTransform: {fileID: 7448107384775468917}
   bulletPrefab: {fileID: 4235825694687685927, guid: ba04c38d6b82dc041b6514a2d1f57db6, type: 3}
